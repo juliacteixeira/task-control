@@ -1,73 +1,99 @@
 import { Request, Response } from "express";
-import Todo from "../../models/task-control.model";
-import { ITodo } from "../../types/task-control.types";
+import TarefaModel from "../../models/task-control/index.model";
+import { ITarefa } from "../../types/task-control/index.types";
 
-const getTodos = async (req: Request, res: Response): Promise<void> => {
+const getTarefas = async (req: Request, res: Response) => {
   try {
-    const todos: ITodo[] = await Todo.find();
-    res.status(200).json({ todos });
-  } catch (error) {
-    throw error;
+    const tarefas = await TarefaModel.find();
+    console.log("data:::", tarefas);
+    res.status(200).json({ status: 400, data: tarefas });
+  } catch (error: any) {
+    res.status(400).json({
+      status: 400,
+      message: error.message,
+    });
   }
 };
 
-const addTodo = async (req: Request, res: Response): Promise<void> => {
+const getTarefaById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const body = req.body as Pick<ITodo, "name" | "description" | "status">
+    const tarefa = await TarefaModel.findById(req.params.id).exec();
+    res.status(200).json({ status: 400, data: tarefa });
+  } catch (error: any) {
+    res.status(400).json({
+      status: 400,
+      message: error.message,
+    });
+  }
+};
 
-    const todo: ITodo = new Todo({
-      name: body.name,
-      description: body.description,
-      status: body.status,
-    })
+const addTarefa = async (req: Request, res: Response): Promise<void> => {
+  try {
 
-    const newTodo: ITodo = await todo.save()
-    const allTodos: ITodo[] = await Todo.find()
+    const newTarefa: ITarefa = new TarefaModel({
+      name: req.body.name,
+      description: req.body.description,
+      status: req.body.status,
+      deadline: req.body.deadline
+    });
+
+    const novaTarefa: ITarefa = await newTarefa.save();
+    const allTarefas: ITarefa[] = await TarefaModel.find();
 
     res
       .status(201)
-      .json({ message: "Todo added", todo: newTodo, todos: allTodos })
-  } catch (error) {
-    throw error
+      .json({ message: "Tarefas inserida", tarefa: novaTarefa, tarefas: allTarefas });
+  } catch (error: any) {
+    res.status(400).json({
+      status: 400,
+      message: error.message,
+    });
   }
-}
+};
 
-const updateTodo = async (req: Request, res: Response): Promise<void> => {
+const updateTarefa = async (req: Request, res: Response): Promise<void> => {
+  
   try {
     const {
       params: { id },
       body,
-    } = req
-    const updateTodo: ITodo | null = await Todo.findByIdAndUpdate(
+    } = req;
+    const updateTarefa: ITarefa | null = await TarefaModel.findByIdAndUpdate(
       { _id: id },
       body
-    )
-    const allTodos: ITodo[] = await Todo.find()
+    );
+    const allTarefas: ITarefa[] = await TarefaModel.find();
     res.status(200).json({
       message: "Todo updated",
-      todo: updateTodo,
-      todos: allTodos,
-    })
-  } catch (error) {
-    throw error
+      tarefa: updateTarefa,
+      tarefas: allTarefas,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      status: 400,
+      message: error.message,
+    });
   }
-}
+};
 
-const deleteTodo = async (req: Request, res: Response): Promise<void> => {
+const deleteTarefa = async (req: Request, res: Response): Promise<void> => {
   try {
-    const deletedTodo: ITodo | null = await Todo.findByIdAndRemove(
+    const deletedTarefa: ITarefa | null = await TarefaModel.findByIdAndRemove(
       req.params.id
-    )
-    const allTodos: ITodo[] = await Todo.find()
+    );
+    const allTarefas: ITarefa[] = await TarefaModel.find();
     res.status(200).json({
       message: "Todo deleted",
-      todo: deletedTodo,
-      todos: allTodos,
-    })
-  } catch (error) {
-    throw error
+      tarefa: deletedTarefa,
+      tarefas: allTarefas,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      status: 400,
+      message: error.message,
+    });
   }
-}
+};
 
-export { getTodos, addTodo, updateTodo, deleteTodo };
+export { getTarefas, getTarefaById, addTarefa, updateTarefa, deleteTarefa };
 
