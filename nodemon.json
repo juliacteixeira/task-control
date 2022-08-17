@@ -3,6 +3,6 @@
       "MONGO_USER": "juuhcteixeira",
       "MONGO_PASSWORD": "W59OBrEZSlilxOvh",
       "MONGO_DB": "taskControl",
-      "PORT": 4000
+      "PORT": 4001
   }
 }
