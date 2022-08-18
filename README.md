@@ -22,3 +22,4 @@ Em uma aba do terminal no diretório raiz rodar o comando `npm start`
 
 Em uma outra aba do terminal no diretório ``/to-doing/`` rodar o comando `ng s`
 
+No diretório ``/to-doing/`` rodar o comando `npm install`

@@ -1,0 +1,202 @@
+<main class="container" *ngIf="!isLoading">
+  <div
+    class="d-flex align-items-center p-3 my-3 text-white bg-purple rounded shadow-sm"
+  >
+    <div class="lh-1">
+      <h1 class="h4 mb-0 text-white lh-1">To-doing</h1>
+      <small>Complete suas tarefas</small>
+    </div>
+  </div>
+
+  <div class="my-3 p-3 bg-body rounded shadow-sm">
+    <h6 class="border-bottom pb-2 mb-0">Tarefas abertas</h6>
+    <div class="d-flex text-muted pt-3">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Status</th>
+            <th>Deadline</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of tasks">
+            <td>{{ item.name }}</td>
+            <td>
+              <small
+                class="rounded-pill p-1"
+                [ngClass]="{
+                  'badge text-bg-primary': item.status === false,
+                  'badge text-bg-success': item.status === true
+                }"
+              >
+                {{ item.status ? "Terminado" : "Pendente" }}
+              </small>
+            </td>
+            <td>{{ item.deadline | date: "dd/MM/YYYY" }}</td>
+            <td>
+              <div class="d-flex justify-content-between">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="showTaskDetail(showTask, item)"
+                >
+                  <div
+                    class="spinner-border text-light spinner-border-sm"
+                    role="status"
+                    *ngIf="isLoadingOffCanvas"
+                  >
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <i class="bi bi-eye" *ngIf="!isLoadingOffCanvas"></i>
+                </button>
+                <button
+                  class="btn btn-primary"
+                  (click)="openModal(editModal, item)"
+                >
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+                <button class="btn btn-danger" (click)="deleteTask(item)">
+                  <i class="bi bi-calendar2-x"></i>
+                </button>
+                <button
+                  class="btn btn-success"
+                  (click)="completeTask(item)"
+                  [disabled]="item.status"
+                >
+                  <i class="bi bi-calendar2-check"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <small class="d-block text-end mt-3">
+      <button (click)="openModal(editModal)" class="btn btn-outline-primary">
+        Nova tarefa
+      </button>
+    </small>
+  </div>
+
+  <div class="row"></div>
+</main>
+
+<div class="d-flex align-items-center" *ngIf="isLoading">
+  <strong>Loading...</strong>
+  <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+</div>
+
+<ng-template #editModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="editModal">
+      {{ title }}
+    </h5>
+    <button
+      type="button"
+      class="close"
+      (click)="modal.dismiss()"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+      <div class="form-group row">
+        <label for="name" class="col-sm-4 col-form-label">Nome</label>
+        <div class="col-sm-8">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            id="name"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="description" class="col-sm-4 col-form-label"
+          >Descrição</label
+        >
+        <div class="col-sm-8">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="description"
+            id="description"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="deadline" class="col-sm-4 col-form-label">Deadline</label>
+        <div class="col-sm-8">
+          <div class="input-group">
+            <input
+              class="form-control"
+              placeholder="dd/mm/yyyy"
+              name="dp"
+              formControlName="deadline"
+              ngbDatepicker
+              #d="ngbDatepicker"
+              [minDate]="today"
+              (click)="d.toggle()"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="modal.dismiss()"
+        >
+          Close
+        </button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #showTask let-offcanvas>
+  <div class="offcanvas-header">
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="offcanvas.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="list-group">
+      <div class="list-group-item list-group-item-action" aria-current="true">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1 w-100">{{ task.name }}</h5>
+          <small>{{ task.deadline | date: "dd/MM/yyyy" }}</small>
+        </div>
+        <p class="mb-1">{{ task.description }}</p>
+        <small
+          class="rounded-pill p-1"
+          [ngClass]="{
+            'badge text-bg-primary': task.status === false,
+            'badge text-bg-success': task.status === true
+          }"
+        >
+          {{ task.status ? "Terminado" : "Pendente" }}
+        </small>
+      </div>
+    </div>
+    <div class="text-end mt-3">
+      <button
+        class="btn btn-success"
+        (click)="completeTask(task, showTask)"
+        [disabled]="task.status"
+      >
+        <i class="bi bi-calendar2-check"></i> Completar
+      </button>
+    </div>
+  </div>
+</ng-template>
