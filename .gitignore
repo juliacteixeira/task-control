@@ -3,8 +3,11 @@
 node_modules/
 dist/
 
+package-lock.json
+
 # Optional npm cache directory
 .npm
 
 # Optional eslint cache
 .eslintcache
+
