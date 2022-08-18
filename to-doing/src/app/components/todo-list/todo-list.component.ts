@@ -75,12 +75,16 @@ export class TodoListComponent implements OnInit {
           console.log(`Closed with: ${result}`);
         },
         (reason) => {
+          console.log(this.taskId);
+
           console.log(`Dismissed ${reason}`);
           this.editForm.patchValue({
             name: '',
             description: '',
             deadline: this.today,
+
           });
+          this.taskId = ''
           this.isEdit = true;
           this.title = 'Editar tarefa';
         }
