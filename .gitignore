@@ -3,7 +3,7 @@
 node_modules/
 dist/
 
-package-lock.json
+/package-lock.json
 
 # Optional npm cache directory
 .npm
