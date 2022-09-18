@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:4000/to-doing'
+  apiUrl: 'http://localhost:4001/to-doing',
+  nginxUrl: 'http://localhost:80'
 };
 
 /*
