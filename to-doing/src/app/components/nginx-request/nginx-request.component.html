@@ -1,0 +1,47 @@
+<main class="container">
+  <div class="my-3 p-3 bg-body rounded shadow-sm">
+    <h6 class="border-bottom pb-2 mb-0">Requestes feitas</h6>
+    <div class="d-flex text-muted pt-3">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>iterator</th>
+            <th>request</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of req; let i = index">
+            <td>
+              {{ i }}
+            </td>
+            <td>
+              {{ item }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <small class="d-block text-end mt-3">
+      <button (click)="sendRequest()" class="btn btn-outline-primary">
+        <div
+          class="spinner-border text-light spinner-border-sm"
+          role="status"
+          *ngIf="isLoadingOffCanvas"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        Nova request
+      </button>
+      <button (click)="sendGroupRequest()" class="btn btn-outline-primary">
+        <div
+          class="spinner-border text-light spinner-border-sm"
+          role="status"
+          *ngIf="isLoadingOffCanvas"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        Novo grupo de requisições
+      </button>
+    </small>
+  </div>
+</main>

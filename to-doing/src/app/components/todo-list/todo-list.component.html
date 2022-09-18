@@ -81,7 +81,9 @@
     </small>
   </div>
 
-  <div class="row"></div>
+  <div class="row">
+    <app-modal [data]="tasks"></app-modal>
+  </div>
 </main>
 
 <div class="d-flex align-items-center" *ngIf="isLoading">
